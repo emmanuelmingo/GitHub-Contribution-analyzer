@@ -1,5 +1,6 @@
 from flask import Flask
 from config import BaseUrl
+from analyzers.language import analyze_language
 import requests
 
 app = Flask(__name__)
@@ -26,6 +27,11 @@ def get_user_info(username):
         reset = response.headers.get("X-RateLimit-Reset")
 
         user_data = response.json()
+        #print(user_data, end='\n')
+        repo_reponse = requests.get(user_data["repos_url"])
+        language = analyze_language(repo_reponse.json())
+        print(language)
+
         return {
             "username": user_data["login"],
             "name": user_data["name"],
