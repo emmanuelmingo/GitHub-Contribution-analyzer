@@ -1,7 +1,7 @@
 from flask import Flask
 from flask_caching import Cache
 from flask_cors import CORS
-from config import BaseUrl, CACHE_CONFIG
+from config import BaseUrl, CACHE_CONFIG, FRONTEND_ORIGINS
 from analyzers.language import analyze_language
 from analyzers.repo import analyze_repo
 from analyzers.commit_frequency import analyze_commit_frequency
@@ -10,7 +10,7 @@ from analyzers.scorer import calculate_score
 import requests
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, origins=FRONTEND_ORIGINS)
 cache = Cache(app, config=CACHE_CONFIG)
 
 
