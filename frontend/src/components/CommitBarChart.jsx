@@ -12,6 +12,15 @@ export default function CommitBarChart({ byDay }) {
     commits: byDay[day] || 0,
   }))
 
+  if (data.every(d => d.commits === 0)) {
+    return (
+      <div className="card">
+        <h3>Commits by Day of Week</h3>
+        <p style={{ color: '#586069', fontSize: 14 }}>No commit data available.</p>
+      </div>
+    )
+  }
+
   return (
     <div className="card">
       <h3>Commits by Day of Week</h3>

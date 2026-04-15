@@ -4,8 +4,8 @@ export default function ActivityLineChart({ byDate }) {
   if (!byDate || Object.keys(byDate).length === 0) {
     return (
       <div className="card">
-        <h3>Commit Activity Over Time</h3>
-        <p style={{ color: '#586069', fontSize: 14 }}>No activity data available.</p>
+        <h3>Commit Activity — Last 90 Days</h3>
+        <p style={{ color: '#586069', fontSize: 14 }}>No commit activity in the last 90 days.</p>
       </div>
     )
   }
