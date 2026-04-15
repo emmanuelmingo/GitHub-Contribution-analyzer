@@ -14,11 +14,6 @@ CORS(app, origins=FRONTEND_ORIGINS)
 cache = Cache(app, config=CACHE_CONFIG)
 
 
-@app.route('/')
-def home():
-    return 'Hello, World!'
-
-
 @app.route("/api/analyze/<username>")
 @cache.cached(timeout=3600)
 def get_user_info(username):
@@ -29,13 +24,20 @@ def get_user_info(username):
     if response.status_code == 404:
         return {"error": "User not found"}, 404
     if response.status_code == 403:
-        return {"error": "Rate limit exceeded"}, 429
+        return {"error": "GitHub rate limit exceeded. Try again in an hour."}, 429
     if not response.ok:
         return {"error": "GitHub API unavailable"}, 502
 
     user_data = response.json()
 
-    repo_response = requests.get(user_data["repos_url"], headers=headers)
+    if user_data.get("type") == "Organization":
+        return {"error": "Organization accounts are not supported. Enter an individual user's username."}, 422
+
+    repo_response = requests.get(
+        user_data["repos_url"],
+        headers=headers,
+        params={"per_page": 100}
+    )
     if not repo_response.ok:
         return {"error": "Could not fetch repositories"}, 502
 

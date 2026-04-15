@@ -2,15 +2,18 @@ from collections import defaultdict
 from datetime import datetime
 import requests
 
+REPO_LIMIT = 10
+
 def analyze_commit_frequency(username, repos, base_url, headers):
     days = defaultdict(int)
     hours = defaultdict(int)
     by_date = defaultdict(int)
     total_commits = 0
 
-    for repo in repos:
-        if repo.get('fork'):
-            continue
+    originals = [r for r in repos if not r.get('fork')]
+    active = sorted(originals, key=lambda r: r.get('pushed_at', ''), reverse=True)[:REPO_LIMIT]
+
+    for repo in active:
         url = f"{base_url}/repos/{username}/{repo['name']}/commits"
         response = requests.get(url, headers=headers, params={"per_page": 100})
         if response.status_code != 200:

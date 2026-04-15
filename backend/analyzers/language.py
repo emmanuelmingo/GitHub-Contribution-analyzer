@@ -3,7 +3,7 @@ def analyze_language(repos):
     count = defaultdict(int)
     output = []
     for repo in repos:
-        language = repo.get('language') # Use get as a safe fail incase language was not given, the app continues running
+        language = repo.get('language')
         if language:
             count[language] += 1
     total_used = sum(count.values())
